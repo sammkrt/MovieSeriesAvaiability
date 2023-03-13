@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="../build/movieAvaiability.Api.props" />
+</Project>

@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "DgSpmVus7A1IHjqxH8ohlhk25rMZY52PJJEgiRtaXbU=",
+  "Source": "movieAvaiability.Api",
+  "BasePath": "_content/movieAvaiability.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
