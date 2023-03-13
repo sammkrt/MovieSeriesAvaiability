@@ -24,6 +24,7 @@ public class UtellyResponse
         public string url { get; set; }
         public string name { get; set; }
         public string icon { get; set; }
+        public string picture { get; set; }
     }
 
     public class UtellyExternalIds

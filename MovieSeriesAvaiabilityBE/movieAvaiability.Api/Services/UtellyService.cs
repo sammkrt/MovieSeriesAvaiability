@@ -23,9 +23,13 @@ public class UtellyService : IUtellyService
             response.EnsureSuccessStatusCode();
             var body = await response.Content.ReadAsStringAsync();
             var responseObj = JsonConvert.DeserializeObject<UtellyResponse>(body);
-            var displayName = responseObj.results[0].locations[0];
-            return displayName;
-            
+            var location = responseObj.results.FirstOrDefault()?.locations.FirstOrDefault();
+            if (location != null)
+            {
+                location.picture = responseObj.results.FirstOrDefault()?.picture;
+            }
+            return location;
         }
     }
+
 }
