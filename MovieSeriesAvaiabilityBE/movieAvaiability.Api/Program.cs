@@ -14,6 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<IUtellyService, UtellyService>();
+builder.Services.AddScoped<IWatchListService, WatchListService>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowOrigin", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());

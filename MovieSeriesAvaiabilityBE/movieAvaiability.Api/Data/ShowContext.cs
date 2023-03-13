@@ -12,4 +12,5 @@ using movieAvaiability.Api.Models;
         {
         }
         public DbSet<Show> Shows { get; set; } = default!;
+        public DbSet<WatchListItem> WatchListItems { get; set; } = default!;
     }
