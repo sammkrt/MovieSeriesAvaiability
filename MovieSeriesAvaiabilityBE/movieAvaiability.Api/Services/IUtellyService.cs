@@ -1,7 +1,9 @@
+using movieAvaiability.Api.Models;
+
 namespace movieAvaiability.Api.Services;
 
 public interface IUtellyService
 {
-    Task<string> GetStream(string term);
+    Task<UtellyResponse.UtellyLocation> GetStream(string term);
 
 }

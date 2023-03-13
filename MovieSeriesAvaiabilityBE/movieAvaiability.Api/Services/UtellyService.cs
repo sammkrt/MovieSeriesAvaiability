@@ -5,7 +5,7 @@ namespace movieAvaiability.Api.Services;
 
 public class UtellyService : IUtellyService
 {
-    public async Task<string> GetStream(string term)
+    public async Task<UtellyResponse.UtellyLocation> GetStream(string term)
     {
         var client = new HttpClient();
         var request = new HttpRequestMessage
@@ -23,7 +23,7 @@ public class UtellyService : IUtellyService
             response.EnsureSuccessStatusCode();
             var body = await response.Content.ReadAsStringAsync();
             var responseObj = JsonConvert.DeserializeObject<UtellyResponse>(body);
-            var displayName = responseObj.results[0].locations[0].display_name;
+            var displayName = responseObj.results[0].locations[0];
             return displayName;
             
         }

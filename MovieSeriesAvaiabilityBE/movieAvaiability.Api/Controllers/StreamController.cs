@@ -17,7 +17,7 @@ public class StreamController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<string>> GetStreamService(string term)
+    public async Task<ActionResult<UtellyResponse.UtellyLocation>> GetStreamService(string term)
     {
        var result = await _utellyService.GetStream(term);
        return result;
