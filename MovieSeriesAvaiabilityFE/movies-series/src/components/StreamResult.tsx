@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Row, Col, Button } from "react-bootstrap";
+import { Row, Col, Button } from "react-bootstrap";
 
 interface StreamResultProps {
   displayName: string;
@@ -7,7 +7,7 @@ interface StreamResultProps {
   logo: string;
   picture: string;
   onAddToWatchlist: () => void;
-  onRemoveFromWatchlist: () => void;
+//   onRemoveFromWatchlist: () => void;
 }
 
 const StreamResult: React.FC<StreamResultProps> = ({
@@ -16,7 +16,7 @@ const StreamResult: React.FC<StreamResultProps> = ({
   logo,
   picture,
   onAddToWatchlist,
-  onRemoveFromWatchlist,
+//   onRemoveFromWatchlist,
 }) => {
   return (
     <Row className="justify-content-center mt-5">
@@ -30,7 +30,7 @@ const StreamResult: React.FC<StreamResultProps> = ({
             className="img-thumbnail"
           />
         </Col>
-        <Col className="d-flex justify-content-between mt-3">
+        <Col className="d-flex justify-content-center mt-3">
           <Button
             size="sm"
             className="mr-10"
@@ -39,14 +39,14 @@ const StreamResult: React.FC<StreamResultProps> = ({
           >
             Add to Watchlist
           </Button>{" "}
-          <Button
+          {/* <Button
             size="sm"
             className="ml-2"
             variant="danger"
             onClick={onRemoveFromWatchlist}
           >
             Remove From Watch List
-          </Button>
+          </Button> */}
         </Col>
         <Col className="d-flex justify-content-center mt-5 ">
           <a className="btn btn-light" href={url} role="button">

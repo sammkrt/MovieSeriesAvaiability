@@ -1,10 +1,8 @@
 import { Container, ListGroup } from "react-bootstrap";
-import { WatchListItem } from "../App"
+import { WatchListItem } from "../types"
 
 interface Props {
   watchlist: WatchListItem[];
-  
-
 }
 
 const WatchlistPage: React.FC<Props> = ({ watchlist }) => {

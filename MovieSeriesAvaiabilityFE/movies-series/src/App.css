@@ -2,9 +2,13 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.logo{
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 50px;
+  width: 170px;
+  margin: 10px;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -25,7 +29,8 @@
 }
 
 .bg-image {
-  position: absolute;
+  position: fixed;
+  background-size: cover;
   margin: 0;
   padding: 0;
   top: 0;
