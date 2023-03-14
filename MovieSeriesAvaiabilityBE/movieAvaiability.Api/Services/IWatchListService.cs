@@ -5,6 +5,6 @@ namespace movieAvaiability.Api.Services;
 public interface IWatchListService
 {
     Task<bool> AddToWatchList(WatchListItem item);
-    Task RemoveFromWatchList(int id);
+    Task RemoveFromWatchList(string movieId);
     Task<IEnumerable<WatchListItem>> GetWatchLists();
 }

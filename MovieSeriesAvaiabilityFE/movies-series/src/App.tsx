@@ -1,141 +1,90 @@
 import React, { useState } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  InputGroup,
-  FormControl,
-  Button,
-} from "react-bootstrap";
+import { Container } from "react-bootstrap";
+import SearchForm from "./components/SearchForm";
+import StreamResult from "./components/StreamResult";
 
 function App() {
-  const [term, setTerm] = useState("");
-  const [displayName, setDisplayName] = useState<string | null>(null);
-  const [url, setUrl] = useState<string | null>(null);
-  const [logo, setLogo] = useState<string | null>(null);
-  const [picture, setPicture] = useState<string | null>(null);
-  const [id, setId] = useState<number>(0);
-  const [watchlistTerm, setWatchlistTerm] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [streamData, setStreamData] = useState<{
+    displayName: string;
+    url: string;
+    logo: string;
+    picture: string;
+    movieId:string;
+  } | null>(null);
 
 
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSearchSubmit = async (term: string) => {
     const response = await fetch(`http://localhost:5297/Stream?term=${term}`);
     const data = await response.json();
-    setDisplayName(data.display_name);
-    setUrl(data.url);
-    setLogo(data.icon);
-    setPicture(data.picture);
-    setWatchlistTerm(term);
-    setId(data.id);
+    setStreamData({
+      displayName: data.display_name,
+      url: data.url,
+      logo: data.icon,
+      picture: data.picture,
+      movieId: data.id,
+    });
+    setSearchTerm(term);
   };
 
   const handleAddToWatchlist = async () => {
-    const response = await fetch("http://localhost:5297/api/WatchList/add",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id : id,
-        term:watchlistTerm,
-        title: displayName,
-        url: url,
-        icon: logo,
-        picture: picture,
-      }),
-    });
-    if (response.ok) {
-      alert("Added to watchlist!");
-    } else {
-      alert("Error adding to watchlist.");
+    if (streamData) {
+      const response = await fetch("http://localhost:5297/api/WatchList/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          movieId: streamData.movieId,
+          term: searchTerm,
+          title: streamData.displayName,
+          url: streamData.url,
+          icon: streamData.logo,
+          picture: streamData.picture,
+        }),
+      });
+      if (response.ok) {
+        alert("Added to watchlist!");
+      } else {
+        alert("Error adding to watchlist.");
+      }
     }
   };
 
-  const handleRemoveFromWatchlist = async (id: number) => {
-    const response = await fetch(`http://localhost:5297/api/WatchList/remove?id=${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if (response.ok) {
-      alert("Removed from watchlist!");
-    } else {
-      alert("Error removing from watchlist.");
+  const handleRemoveFromWatchlist = async () => {
+    if (streamData) {
+      const response = await fetch(`http://localhost:5297/api/WatchList/remove?id=${streamData.movieId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.ok) {
+        alert("Removed from watchlist!");
+      } else {
+        alert("Error removing from watchlist.");
+      }
     }
   };
 
   return (
     <Container>
-      <Row className="justify-content-center mt-5">
-        <Col md={6}>
-          <h1 className="text-center">Check the movies and series availability</h1>
-        </Col>
-      </Row>
-      <Row className="justify-content-center mt-5">
-        <Col md={6}>
-          <form onSubmit={handleSubmit}>
-            <InputGroup>
-              <FormControl
-                placeholder="Search for a TV show or movie"
-                value={term}
-                onChange={(e) => setTerm(e.target.value)}
-              />
-              <Button variant="primary" type="submit">
-                Search
-              </Button>
-            </InputGroup>
-          </form>
-        </Col>
-      </Row>
-      {displayName === null && (
-        <Row className="justify-content-center mt-5">
-          <Col md={6}>
-            <p className="text-center">
-              Search for a TV show or movie to see where you can watch it.
-            </p>
-          </Col>
-        </Row>
+      <h1 className="text-center mt-5">Check the movies and series availability</h1>
+      <SearchForm onSubmit={handleSearchSubmit} />
+      {!streamData && (
+        <p className="text-center mt-5">
+          Search for a TV show or movie to see where you can watch it.
+        </p>
       )}
-      {displayName && url && logo && picture && (
-        <Row className="justify-content-center mt-5">
-          <Col md={6}>
-            <p className="text-center">
-              {displayName}
-            </p>
-            <Col className="d-flex justify-content-center">
-            <img
-                src={picture}
-                alt="Poster"
-                style={{ maxWidth: "500px", maxHeight: "250px" }}
-              />
-              </Col>
-              <Col className="d-flex justify-content-center mb-3">
-              <Button variant="success" onClick={handleAddToWatchlist}>
-                Add to Watchlist
-              </Button>{" "}
-              <Button
-                variant="danger"
-                onClick={() => handleRemoveFromWatchlist(id)}
-                
-              >
-                Remove From Watch List
-              </Button>
-            </Col>
-            <Col  className="d-flex justify-content-center">
-              <a href={url} target="_blank" rel="noreferrer">
-                <img
-                  src={logo}
-                  alt="Logo"
-                  style={{ maxWidth: "92px", maxHeight: "40px" }}
-                />
-              </a>
-            </Col>
-          </Col>
-        </Row>
+      {streamData && (
+        <StreamResult
+          displayName={streamData.displayName}
+          url={streamData.url}
+          logo={streamData.logo}
+          picture={streamData.picture}
+          onAddToWatchlist={handleAddToWatchlist}
+          onRemoveFromWatchlist={handleRemoveFromWatchlist}
+        />
       )}
     </Container>
   );

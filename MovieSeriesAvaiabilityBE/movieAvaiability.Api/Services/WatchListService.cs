@@ -26,9 +26,9 @@ public class WatchListService : IWatchListService
         return true;
     }
 
-    public async Task RemoveFromWatchList(int id)
+    public async Task RemoveFromWatchList(string movieId)
     {
-        var item = await _showContext.WatchListItems.FindAsync(id);
+        var item = await _showContext.WatchListItems.FirstOrDefaultAsync(x => x.MovieId == movieId);
         if (item != null)
         {
             _showContext.WatchListItems.Remove(item);

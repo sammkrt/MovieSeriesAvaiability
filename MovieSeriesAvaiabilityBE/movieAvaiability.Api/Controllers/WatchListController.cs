@@ -34,7 +34,7 @@ public class WatchListController : ControllerBase
     }
 
     [HttpDelete("remove")]
-    public async Task RemoveFromWatchList(int id)
+    public async Task RemoveFromWatchList(string id)
     {
         await _watchListService.RemoveFromWatchList(id);
     
