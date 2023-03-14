@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col, Button } from "react-bootstrap";
+import { Card, Row, Col, Button } from "react-bootstrap";
 
 interface StreamResultProps {
   displayName: string;
@@ -27,22 +27,34 @@ const StreamResult: React.FC<StreamResultProps> = ({
             src={picture}
             alt="Poster"
             style={{ maxWidth: "500px", maxHeight: "250px" }}
+            className="img-thumbnail"
           />
         </Col>
-        <Col className="d-flex justify-content-center mb-3">
-          <Button variant="success" onClick={onAddToWatchlist}>
+        <Col className="d-flex justify-content-between mt-3">
+          <Button
+            size="sm"
+            className="mr-10"
+            variant="success"
+            onClick={onAddToWatchlist}
+          >
             Add to Watchlist
           </Button>{" "}
-          <Button variant="danger" onClick={onRemoveFromWatchlist}>
+          <Button
+            size="sm"
+            className="ml-2"
+            variant="danger"
+            onClick={onRemoveFromWatchlist}
+          >
             Remove From Watch List
           </Button>
         </Col>
-        <Col className="d-flex justify-content-center">
-          <a href={url} target="_blank" rel="noreferrer">
+        <Col className="d-flex justify-content-center mt-5 ">
+          <a className="btn btn-light" href={url} role="button">
+            {" "}
             <img
               src={logo}
               alt="Logo"
-              style={{ maxWidth: "92px", maxHeight: "40px" }}
+              style={{ maxWidth: "45", maxHeight: "20" }}
             />
           </a>
         </Col>
