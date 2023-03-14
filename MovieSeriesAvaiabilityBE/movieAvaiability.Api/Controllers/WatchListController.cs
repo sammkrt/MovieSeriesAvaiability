@@ -14,44 +14,29 @@ public class WatchListController : ControllerBase
     {
         _watchListService = watchListService;
     }
-    
+
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Show>>> GetShow()
+    public async Task<IEnumerable<WatchListItem>> GetAllWatchList()
     {
-        if (_watchListService.Shows == null)
-        {
-            return NotFound();
-        }
-        return await _context.Shows.ToListAsync();
-    }
-    
-    [HttpPost("watchlist")]
-    public async Task<IActionResult> AddToWatchList(WatchListItem item, [FromServices] IWatchListService watchListService)
-    {
-        try
-        {
-            await _watchListService.AddItemToWatchList(item);
-            return Ok();
-        }
-        catch (Exception ex)
-        {
-            // handle the exception
-            return StatusCode(StatusCodes.Status500InternalServerError);
-        }
+        return await _watchListService.GetWatchLists();
     }
 
-    [HttpDelete("watchlist/{id}")]
-    public async Task<IActionResult> RemoveFromWatchList(int id, [FromServices] IWatchListService watchListService)
+
+    [HttpPost("add")]
+    public async Task<IActionResult> AddToWatchList(WatchListItem item)
     {
-        try
+        var result = await _watchListService.AddToWatchList(item);
+        if (result)
         {
-            await watchListService.RemoveItemFromWatchList(id);
             return Ok();
         }
-        catch (Exception ex)
-        {
-            // handle the exception
-            return StatusCode(StatusCodes.Status500InternalServerError);
-        }
+        return BadRequest("The item is already in the watchlist.");
+    }
+
+    [HttpDelete("remove")]
+    public async Task RemoveFromWatchList(int id)
+    {
+        await _watchListService.RemoveFromWatchList(id);
+    
     }
 }

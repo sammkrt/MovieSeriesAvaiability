@@ -7,8 +7,6 @@ import {
   FormControl,
   Button,
 } from "react-bootstrap";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Link } from "react-router-dom";
 
 function App() {
   const [term, setTerm] = useState("");
@@ -16,7 +14,9 @@ function App() {
   const [url, setUrl] = useState<string | null>(null);
   const [logo, setLogo] = useState<string | null>(null);
   const [picture, setPicture] = useState<string | null>(null);
-  const [watchlist, setWatchlist] = useState<string[]>([]);
+  const [id, setId] = useState<number>(0);
+  const [watchlistTerm, setWatchlistTerm] = useState<string>("");
+
 
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -27,18 +27,23 @@ function App() {
     setUrl(data.url);
     setLogo(data.icon);
     setPicture(data.picture);
+    setWatchlistTerm(term);
+    setId(data.id);
   };
 
   const handleAddToWatchlist = async () => {
-    const response = await fetch("http://localhost:5297/api/WatchList/watchlist", {
+    const response = await fetch("http://localhost:5297/api/WatchList/add",
+    {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        id : id,
+        term:watchlistTerm,
         title: displayName,
         url: url,
-        logo: logo,
+        icon: logo,
         picture: picture,
       }),
     });
@@ -49,22 +54,19 @@ function App() {
     }
   };
 
-const handleRemoveFromWatchlist = async (title: string) => {
-  const response = await fetch("http://localhost:5297/api/WatchList/watchlist", {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      title: title,
-    }),
-  });
-  if (response.ok) {
-    alert("Removed from watchlist!");
-  } else {
-    alert("Error removing from watchlist.");
-  }
-};
+  const handleRemoveFromWatchlist = async (id: number) => {
+    const response = await fetch(`http://localhost:5297/api/WatchList/remove?id=${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.ok) {
+      alert("Removed from watchlist!");
+    } else {
+      alert("Error removing from watchlist.");
+    }
+  };
 
   return (
     <Container>
@@ -117,8 +119,8 @@ const handleRemoveFromWatchlist = async (title: string) => {
               </Button>{" "}
               <Button
                 variant="danger"
-                onClick={() => handleRemoveFromWatchlist(displayName)}
-                disabled={!watchlist.includes(displayName)}
+                onClick={() => handleRemoveFromWatchlist(id)}
+                
               >
                 Remove From Watch List
               </Button>

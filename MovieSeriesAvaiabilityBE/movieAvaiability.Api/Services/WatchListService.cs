@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using movieAvaiability.Api.Models;
 
 namespace movieAvaiability.Api.Services;
@@ -12,13 +13,20 @@ public class WatchListService : IWatchListService
     }
 
     
-    public async Task AddItemToWatchList(WatchListItem item)
+    public async Task<bool> AddToWatchList(WatchListItem item)
     {
-        await _showContext.WatchListItems.AddAsync(item);
+        var existingItem = await _showContext.WatchListItems.FirstOrDefaultAsync(w => w.Term == item.Term && w.Title == item.Title);
+        if (existingItem != null)
+        {
+            return false;
+        }
+
+        _showContext.WatchListItems.Add(item);
         await _showContext.SaveChangesAsync();
+        return true;
     }
 
-    public async Task RemoveItemFromWatchList(int id)
+    public async Task RemoveFromWatchList(int id)
     {
         var item = await _showContext.WatchListItems.FindAsync(id);
         if (item != null)
@@ -27,6 +35,17 @@ public class WatchListService : IWatchListService
             await _showContext.SaveChangesAsync();
         }
     }
+    
+    public async Task<IEnumerable<WatchListItem>> GetWatchLists()
+    {
+        var watchListItems = await _showContext.WatchListItems.ToListAsync();
+        // if (watchListItems == null || watchListItems.Count == 0)
+        // {
+        //     throw new NotFoundException("No watchlist items found.");
+        // }
+        return watchListItems;
+    }
+
     
     
 }
