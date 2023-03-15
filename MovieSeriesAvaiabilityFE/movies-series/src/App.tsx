@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Card, ListGroup, Container, Button } from "react-bootstrap";
+import { Card, ListGroup, Container, Button, Modal } from "react-bootstrap";
 import SearchForm from "./components/SearchForm";
 import StreamResult from "./components/StreamResult";
 import BackgroundImage from "./components/BackgroundImage";
 import { WatchListItem, StreamDataType } from "./types";
 import uuid from "react-uuid";
-import logo from './img/logo2.png';
+import logo from "./img/logo2.png";
 import "./App.css";
-
 
 function App() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -15,6 +14,8 @@ function App() {
   const [watchlist, setWatchlist] = useState<WatchListItem[]>([]);
   const [showWatchlist, setShowWatchlist] = useState(false);
   const [showWatchlistButton, setShowWatchlistButton] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   useEffect(() => {
     const fetchWatchlist = async () => {
@@ -28,15 +29,20 @@ function App() {
 
   const handleSearchSubmit = async (term: string) => {
     const response = await fetch(`http://localhost:5297/Stream?term=${term}`);
-    const data = await response.json();
-    setStreamData({
-      displayName: data.display_name,
-      url: data.url,
-      logo: data.icon,
-      picture: data.picture,
-      movieId: uuid(),
-    });
-    setSearchTerm(term);
+    if (!response.ok) {
+      setErrorMessage("Couldn't find the movie or TV show.");
+    } else {
+      const data = await response.json();
+      setStreamData({
+        displayName: data.display_name,
+        url: data.url,
+        logo: data.icon,
+        picture: data.picture,
+        movieId: uuid(),
+      });
+      setSearchTerm(term);
+      setIsSearching(true);
+    }
   };
 
   const handleAddToWatchlist = async () => {
@@ -71,15 +77,14 @@ function App() {
             picture,
           };
           setWatchlist([...watchlist, newItem]);
-          alert("Added to watchlist!");
           setSearchTerm("");
           setStreamData(null);
           setShowWatchlistButton(true);
         } else {
-          alert("Error adding to watchlist.");
+          setErrorMessage("This movie is already in your watchlist");
         }
       } catch (error) {
-        alert("Error adding to watchlist.");
+        setErrorMessage("Error adding to watchlist.");
       }
     }
   };
@@ -97,7 +102,7 @@ function App() {
       setWatchlist(watchlist.filter((item) => item.movieId !== movieId));
       // alert("Removed from watchlist!");
     } else {
-      alert("Error removing from watchlist.");
+      // alert("Error removing from watchlist.");
     }
   };
   const handleItemClick = (event: React.MouseEvent, movieId: string) => {
@@ -115,12 +120,18 @@ function App() {
     setShowWatchlist(!showWatchlist);
   };
 
+  const handleCloseModal = () => {
+    setErrorMessage("");
+  };
+
   return (
     <Container>
       <div>
-        <BackgroundImage />
+        <div className={`background-image ${isSearching ? "blur" : ""}`}>
+          <BackgroundImage />
+        </div>
         <img src={logo} alt="Logo" className="logo" />
-        <h1 className=" text-center m-5">
+        <h1 className="text-center m-5">
           Check the movies and series availability
         </h1>
         <SearchForm onSubmit={handleSearchSubmit} />
@@ -129,6 +140,18 @@ function App() {
             Search for a TV show or movie to see where you can watch it.
           </h4>
         )}
+        <Modal show={!!errorMessage} onHide={handleCloseModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Error</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>{errorMessage}</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseModal}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
         {streamData && (
           <StreamResult
             displayName={streamData.displayName}
@@ -144,7 +167,7 @@ function App() {
             onClick={handleToggleWatchlist}
             className="mr-7 "
             size="lg"
-            style={{ display: showWatchlistButton ? "inline-block" : "none" }} 
+            style={{ display: showWatchlistButton ? "inline-block" : "none" }}
           >
             {showWatchlist ? "Hide Watchlist" : "Show Watchlist"}
           </Button>
@@ -152,7 +175,7 @@ function App() {
         {showWatchlist && watchlist.length > 0 && (
           <div className="d-flex justify-content-center mt-5">
             <Card style={{ width: "50rem" }}>
-              <Card.Header>Name</Card.Header>
+              <Card.Header style={{ fontWeight: "bold" }}>Name</Card.Header>
               <ListGroup variant="flush">
                 {watchlist.map((item) => (
                   <ListGroup.Item

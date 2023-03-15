@@ -39,10 +39,6 @@ public class WatchListService : IWatchListService
     public async Task<IEnumerable<WatchListItem>> GetWatchLists()
     {
         var watchListItems = await _showContext.WatchListItems.ToListAsync();
-        // if (watchListItems == null || watchListItems.Count == 0)
-        // {
-        //     throw new NotFoundException("No watchlist items found.");
-        // }
         return watchListItems;
     }
 

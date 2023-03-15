@@ -16,11 +16,15 @@ public class WatchListController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IEnumerable<WatchListItem>> GetAllWatchList()
+    public async Task<ActionResult<IEnumerable<WatchListItem>>> GetAllWatchList()
     {
-        return await _watchListService.GetWatchLists();
+        var watchListItems = await _watchListService.GetWatchLists();
+        if (watchListItems == null || !watchListItems.Any())
+        {
+            return NotFound();
+        }
+        return Ok(watchListItems);
     }
-
 
     [HttpPost("add")]
     public async Task<IActionResult> AddToWatchList(WatchListItem item)

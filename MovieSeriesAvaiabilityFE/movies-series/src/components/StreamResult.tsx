@@ -7,7 +7,7 @@ interface StreamResultProps {
   logo: string;
   picture: string;
   onAddToWatchlist: () => void;
-//   onRemoveFromWatchlist: () => void;
+  //   onRemoveFromWatchlist: () => void;
 }
 
 const StreamResult: React.FC<StreamResultProps> = ({
@@ -16,7 +16,7 @@ const StreamResult: React.FC<StreamResultProps> = ({
   logo,
   picture,
   onAddToWatchlist,
-//   onRemoveFromWatchlist,
+  //   onRemoveFromWatchlist,
 }) => {
   return (
     <Row className="justify-content-center mt-5">
@@ -49,7 +49,7 @@ const StreamResult: React.FC<StreamResultProps> = ({
           </Button> */}
         </Col>
         <Col className="d-flex justify-content-center mt-5 ">
-          <a className="btn btn-light" href={url} role="button">
+          <a className="btn btn-light" href={url} target="_blank" rel="noreferrer" role="button">
             {" "}
             <img
               src={logo}

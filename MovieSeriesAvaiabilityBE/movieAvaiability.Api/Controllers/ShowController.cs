@@ -28,7 +28,7 @@ namespace movieAvaiability.Api.Controllers
           {
               return NotFound();
           }
-            return await _context.Shows.ToListAsync();
+          return await _context.Shows.ToListAsync();
         }
 
         // GET: api/Show/5
@@ -108,7 +108,6 @@ namespace movieAvaiability.Api.Controllers
             {
                 return NotFound();
             }
-
             _context.Shows.Remove(show);
             await _context.SaveChangesAsync();
 
