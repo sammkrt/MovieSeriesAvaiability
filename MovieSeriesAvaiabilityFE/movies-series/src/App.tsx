@@ -3,14 +3,11 @@ import { Card, ListGroup, Container, Button, Modal } from "react-bootstrap";
 import SearchForm from "./components/SearchForm";
 import StreamResult from "./components/StreamResult";
 import BackgroundImage from "./components/BackgroundImage";
-import { WatchListItem, StreamDataType } from "./types";
+import { WatchListItem, StreamDataType,ShowRemoveButton } from "./types";
 import uuid from "react-uuid";
 import logo from "./img/logo2.png";
 import "./App.css";
 
-type ShowRemoveButton = {
-  [key: string]: boolean;
-};
 
 function App() {
   const [searchTerm, setSearchTerm] = useState("");

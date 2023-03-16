@@ -16,3 +16,7 @@ export interface WatchListItem {
     icon: string;
     picture: string;
   }
+
+ export type ShowRemoveButton = {
+    [key: string]: boolean;
+  };
