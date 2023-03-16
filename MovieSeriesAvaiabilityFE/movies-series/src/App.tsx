@@ -8,6 +8,10 @@ import uuid from "react-uuid";
 import logo from "./img/logo2.png";
 import "./App.css";
 
+type ShowRemoveButton = {
+  [key: string]: boolean;
+};
+
 function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [streamData, setStreamData] = useState<StreamDataType | null>(null);
@@ -15,6 +19,9 @@ function App() {
   const [showWatchlist, setShowWatchlist] = useState(false);
   const [showWatchlistButton, setShowWatchlistButton] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
+  const [showRemoveButton, setShowRemoveButton] = useState<ShowRemoveButton>(
+    {}
+  );
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   useEffect(() => {
@@ -98,24 +105,23 @@ function App() {
         },
       }
     );
+
     if (response.ok) {
       setWatchlist(watchlist.filter((item) => item.movieId !== movieId));
-      // alert("Removed from watchlist!");
     } else {
-      // alert("Error removing from watchlist.");
+      setErrorMessage(
+        `Error removing movie with ID ${movieId}: ${response.statusText}`
+      );
     }
   };
-  const handleItemClick = (event: React.MouseEvent, movieId: string) => {
-    const target = event.target as HTMLElement;
-    const removeButton = target.querySelector(
-      `button[data-movie-id="${movieId}"]`
-    ) as HTMLElement;
 
-    if (removeButton) {
-      removeButton.style.display =
-        removeButton.style.display === "none" ? "inline-block" : "none";
-    }
+  const handleItemClick = (movieId: string) => {
+    setShowRemoveButton({
+      ...showRemoveButton,
+      [movieId]: !showRemoveButton[movieId],
+    });
   };
+
   const handleToggleWatchlist = () => {
     setShowWatchlist(!showWatchlist);
   };
@@ -180,7 +186,7 @@ function App() {
                 {watchlist.map((item) => (
                   <ListGroup.Item
                     key={item.id}
-                    onClick={(event) => handleItemClick(event, item.movieId)}
+                    onClick={() => handleItemClick(item.movieId)}
                     style={{ cursor: "pointer" }}
                     className="d-flex justify-content-between align-items-center"
                   >
@@ -192,7 +198,11 @@ function App() {
                       onClick={() => {
                         handleRemoveClick(item.movieId);
                       }}
-                      style={{ display: "none" }}
+                      style={{
+                        display: showRemoveButton[item.movieId]
+                          ? "inline-block"
+                          : "none",
+                      }}
                     >
                       Remove
                     </Button>
