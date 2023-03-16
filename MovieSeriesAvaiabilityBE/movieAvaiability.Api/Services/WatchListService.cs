@@ -16,10 +16,10 @@ public class WatchListService : IWatchListService
     public async Task<bool> AddToWatchList(WatchListItem item)
     {
         var existingItem = await _showContext.WatchListItems.FirstOrDefaultAsync(w => w.Term == item.Term && w.Title == item.Title);
-        // if (existingItem != null)
-        // {
-        //     return false;
-        // }
+        if (existingItem != null)
+        {
+            return false;
+        }
 
         _showContext.WatchListItems.Add(item);
         await _showContext.SaveChangesAsync();
