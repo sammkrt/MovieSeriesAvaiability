@@ -37,3 +37,12 @@ Features
 -   Add movies and TV shows to a watchlist for easy access later.
 -   View information about the availability of a movie or TV show on various streaming platforms.
 
+Demo
+--------
+
+https://user-images.githubusercontent.com/98431169/226208877-f5a1f266-879d-460b-9f19-73cf8e03bea8.mp4
+
+
+
+
+
